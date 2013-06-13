@@ -1,4 +1,4 @@
-package model
+package url
 
 import (
   "github.com/shingara/goup/config"
@@ -13,11 +13,11 @@ type Url struct {
 
 // The collection where urls document are save
 func Get_collection() *mgo.Collection {
-  return config.Get_mongo_db().C("url")
+  return config.DB.C("url")
 }
 
 // Get the url with this url pass in args
-func Get_url(url string) Url {
+func Get(url string) Url {
   result := Url{}
   err := Get_collection().Find(bson.M{"url": url}).One(&result)
   if err != nil {
@@ -26,7 +26,7 @@ func Get_url(url string) Url {
   return result
 }
 
-func Get_urls() []Url {
+func All() []Url {
   result := []Url{}
   Get_collection().Find(nil).All(&result)
   return result
@@ -34,7 +34,7 @@ func Get_urls() []Url {
 
 // Insert this url with url pass in args
 // TODO: Need valid Url
-func Add_url(url *Url)  {
+func Add(url *Url)  {
   err := Get_collection().Insert(url)
   if err != nil {
     panic(err)
