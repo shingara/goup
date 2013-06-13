@@ -8,6 +8,7 @@ import (
 
 // A struct representing an URL
 type Url struct {
+  Id_ bson.ObjectId `bson:"_id"`
   Name string
 }
 

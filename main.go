@@ -7,7 +7,7 @@ import (
 
   "github.com/shingara/goup/config"
   "github.com/shingara/goup/request"
-  "github.com/shingara/goup/models"
+  "github.com/shingara/goup/models/url"
 )
 
 func main() {
@@ -16,12 +16,14 @@ func main() {
   defer config.CloseSession()
 
   if (len(os.Args) > 1 && os.Args[1] == "add") {
-    url_element := &url.Url{os.Args[2]}
+    url_element := &url.Url{
+      Name: os.Args[2],
+    }
     url.Add(url_element)
   } else {
 
     /* config.log_level(config.Level_info) */
-    urls := make(chan string, 100)
+    urls := make(chan url.Url, 100)
     status := make(chan int, 100)
 
     /* Launch request pool */
@@ -36,7 +38,7 @@ func main() {
       for t := range ticker.C {
         fmt.Printf("t : %v\n", t)
         for _, url := range url.All() {
-          urls <- url.Name
+          urls <- url
         }
       }
     }()
