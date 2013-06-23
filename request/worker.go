@@ -22,7 +22,7 @@ func read_status(status chan int) {
   }
 }
 
-func Start() {
+func Start(finish chan int) {
   /* config.log_level(config.Level_info) */
   urls := make(chan models.Url, 100)
   status := make(chan int, 100)
@@ -36,7 +36,7 @@ func Start() {
   go url_sender(urls)
   /* Read status */
   go read_status(status)
-
-  time.Sleep(time.Millisecond * 20000)
-  close(urls)
+  <- finish
+  fmt.Printf("close urls channel")
+  defer close(urls)
 }

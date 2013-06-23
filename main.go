@@ -5,6 +5,7 @@ import (
   "github.com/shingara/goup/config"
   "github.com/shingara/goup/worker"
   "github.com/shingara/goup/request"
+  "github.com/shingara/goup/web"
 )
 
 func main() {
@@ -14,6 +15,9 @@ func main() {
   if (len(os.Args) > 1 && os.Args[1] == "add") {
     worker.AddUrl(os.Args[2])
   } else {
-    request.Start()
+    finish := make(chan int, 2)
+    go request.Start(finish)
+    web.Start()
+    finish <- 0
   }
 }
