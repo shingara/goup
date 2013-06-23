@@ -1,56 +1,19 @@
 package main
 
 import (
-  "fmt"
-  "time"
   "os"
-
   "github.com/shingara/goup/config"
+  "github.com/shingara/goup/worker"
   "github.com/shingara/goup/request"
-  "github.com/shingara/goup/models/url"
 )
 
 func main() {
 
-  config.InitMongo()
   defer config.CloseSession()
 
   if (len(os.Args) > 1 && os.Args[1] == "add") {
-    url_element := &url.Url{
-      Name: os.Args[2],
-    }
-    url.Add(url_element)
+    worker.AddUrl(os.Args[2])
   } else {
-
-    /* config.log_level(config.Level_info) */
-    urls := make(chan url.Url, 100)
-    status := make(chan int, 100)
-
-    /* Launch request pool */
-    for w := 1; w <= 10; w++ {
-      go request.Req(urls, status)
-    }
-
-    ticker := time.NewTicker(time.Millisecond * 1000)
-
-    /* Send urls */
-    go func(){
-      for t := range ticker.C {
-        fmt.Printf("t : %v\n", t)
-        for _, url := range url.All() {
-          urls <- url
-        }
-      }
-    }()
-
-    /* Read status */
-    go func(){
-      for statut := range status {
-        fmt.Printf("status : %d\n", statut)
-      }
-    }()
-
-    time.Sleep(time.Millisecond * 20000)
-    close(urls)
+    request.Start()
   }
 }
