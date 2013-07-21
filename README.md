@@ -73,114 +73,12 @@ like :
 The feature need to be implement in this order. This order can change in
 future.
 
-### Configuration by variable environement
+ * Configuration by variable environement [#1][]
+ * Add API to add some URL [#2][]
+ * Add API to get information about an URL [#3][]
+ * Add API to get all check information about an URL [#4][]
 
-The configuration of the Database is write directly in the code, We
-really need define it by ENV variable
-
- * MongoDB Host
- * MongoDB Port
- * MongoDB Username
- * MongoDB Password
- * MongoDB Database
-
-### Add API to add some URL
-
-Add API to add new check url. The format will be :
-
-```
-POST /url, { :name => xxx }
-```
-
-If the URL is valid return the URL format in JSON with code 201
-If the URL is not pass in params, return a code 400, and a JSON of this
-error
-```
-{
-  error: 'you need pass name args'
-}
-```
-If the URL is already save on the database return a code 400 with a JSON
-error
-
-```
-{
-  error: 'url already check'
-}
-```
-
-### Add API to get information about an URL
-
-We need get all information about url check. An API get all of this
-information. The URL must be to
-
-```
-GET /url/:id
-```
-
-The return if the URL exist is the url JSON response with HTTP status
-code 200
-
-Change the format of the URL JSON response with the new more JSON-api
-related :
-
-```
-{
-  urls:[{
-    id: '213eq2',
-    src: 'http://google.com'
-    last_status: 200
-    last_checked_at: "Tue, 01 Jan 2013 04:51:39 +0000"
-    href: 'http:/xxx/urls/213eq2'
-  }]
-}
-```
-Note : the date is on format RFC 2822
-
-In the same way, the API GET /urls need change is format in correspond
-to the GET /urls/x response.
-
-## Add API to get all check information about an URL
-
-an URL can get all informations about check doing :
-
-```
-GET /urls/:id/checks
-```
-
-The return is in format like :
-
-```
-{
-  urls:[{
-    id: '213eq2',
-    src: 'http://google.com'
-    last_status: 200
-    last_checked_at: "Tue, 01 Jan 2013 04:51:39 +0000"
-    href: 'http:/xxx/urls/213eq2'
-  }],
-  links: {
-    checks.url: 'http:/xxx/urls/{checks.url}'
-  }
-  checks: [
-    {
-      id: '453qa3',
-      status: 200,
-      checked_at: "Tue, 01 Jan 2013 04:51:39 +0000",
-      links: {
-        'url': '213eq2',
-      }
-    },
-    {
-      id: '453qa4',
-      status: 200,
-      checked_at: "Tue, 01 Jan 2013 04:49:39 +0000",
-      links: {
-        'url': '213eq2',
-      }
-    }
-  ]
-}
-```
-
-The return is limit to 100 checks information
+[#1]: https://github.com/shingara/goup/issues/1
+[#2]: https://github.com/shingara/goup/issues/2
+[#3]: https://github.com/shingara/goup/issues/3
+[#4]: https://github.com/shingara/goup/issues/4
